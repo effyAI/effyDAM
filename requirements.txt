@@ -1,0 +1,8 @@
+nltk
+spacy
+transformers
+timm
+numpy
+ultralytics
+flask
+pymongo
