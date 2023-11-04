@@ -1,8 +1,19 @@
-# # Add new file to mongodb database with captions and keywords
-# import pymongo
+# Add new file to mongodb database with captions and keywords
+import pymongo
 
-# client = pymongo.MongoClient("mongodb+srv://effybizai:AhM2SPj8dKfLId89@cluster0.yfq6agh.mongodb.net/?retryWrites=true&w=majority")
-# db = client["effy-ai-tagging"]
+client = pymongo.MongoClient("mongodb+srv://effybizai:AhM2SPj8dKfLId89@cluster0.yfq6agh.mongodb.net/?retryWrites=true&w=majority")
+db = client["effy-ai-tagging"]
+
+mycollection = db["keyword_table"]
+
+keywords = []
+
+for doc in mycollection.find():
+    print(doc)    
+    # word = doc["keyword"]
+    # keywords.append(word)    
+
+
 
 # base_table = db["base_table"]
 # keyword_table = db["keyword_table"]

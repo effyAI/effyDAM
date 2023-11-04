@@ -10,29 +10,35 @@ mycollection = db["keyword_table"]
 
 keywords = []
 
+def process_list(input_list):
+    word_list = []
+    for word in input_list:
+        doc = nlp(word)
+        for token in doc:
+            if token.is_stop == False:
+                word_list.append(token.lemma_)
+        return word_list
+
 for doc in mycollection.find():
     
-    keyword = doc["keyword"]
-    img_ids = doc["img_ids"]
-    img_dir = doc["img_dir"]
-    vid_ids = doc["vid_ids"]
-    vid_dir = doc["vid_dir"]
-
-    keywords.append(keyword)    
+    word = doc["keyword"]
+    keywords.append(word)    
 
 
-def get_data(word_list, filter):
+def get_data(input, filter):
     final_ids = []
     final_dirs = []
+    word_list = process_list(input)
+    
     if filter == None:
         for word in word_list:     
             if word in keywords:
                 for doc in mycollection.find():
                     keyword = doc["keyword"]
                     img_ids = doc["img_ids"]
-                    img_dirs = doc["img_dir"]
+                    img_dirs = doc["img_dirs"]
                     vid_ids = doc["vid_ids"]
-                    vid_dirs = doc["vid_dir"]
+                    vid_dirs = doc["vid_dirs"]
                     
                     if keyword == word:
                         for i in img_ids:
@@ -54,7 +60,7 @@ def get_data(word_list, filter):
                 for doc in mycollection.find():
                     keyword = doc["keyword"]
                     img_ids = doc["img_ids"]
-                    img_dirs = doc["img_dir"]                    
+                    img_dirs = doc["img_dirs"]                    
                     if keyword == word:
                         for i in img_ids:
                             if i not in final_ids:
@@ -69,7 +75,7 @@ def get_data(word_list, filter):
                 for doc in mycollection.find():
                     keyword = doc["keyword"]
                     vid_ids = doc["vid_ids"]
-                    vid_dirs = doc["vid_dir"]
+                    vid_dirs = doc["vid_dirs"]
 
                     for i in vid_ids:
                         if i not in final_ids:
@@ -77,7 +83,10 @@ def get_data(word_list, filter):
                     for i in vid_dirs:
                         if i not in final_dirs:
                             final_dirs.append(i)
+    
+    
     return final_ids, final_dirs
+
 
 
 
@@ -86,19 +95,8 @@ def get_data(word_list, filter):
 def search(data, filter = None):
     
     input = data["data"]
-    if type(input) == list:
-        word_list = input
-        final_ids, final_dirs = get_data(word_list, filter)  
+    final_ids, final_dirs = get_data(input, filter)  
                         
-    elif type(input) == str:
-        sentence = input
-        word_list = []
-        doc = nlp(sentence)
-        for token in doc:
-            if token.is_stop == False:
-                word_list.append(token.lemma_)
-
-        final_ids, final_dirs = get_data(word_list)     
 
     output = {
         "ids":final_ids,
@@ -106,3 +104,8 @@ def search(data, filter = None):
     }
 
     return output
+
+
+# datas = {"data":["person standing in fron of bus"]}
+
+# print(search(datas))

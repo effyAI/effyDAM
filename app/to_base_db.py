@@ -10,27 +10,29 @@ base_table = db["base_table"]
         
 def new_data(data):
     
-    uid = data["uid"]
-    s3_url = data["s3_url"]
-    directory = data["directory"]
+    uuid = data["uid"]
+    s3 = data["s3_url"]
+    dir = data["directory"]
     file_type = data["type"]
     date = data["date"]
     time = data["time"]
 
-    keywords, caption = get_tags(s3_url,file_type)
+    keywords, caption = get_tags(s3,file_type)
     
-    send = {"uid":uid,"s3_url":s3_url,"dir":directory,"file_type":file_type, "keywords":keywords, "caption":caption, "date":date, "time":time}
+    send = {"uid":uuid,"s3_url":s3,"dir":dir,"file_type":file_type, "keywords":keywords, "caption":caption, "date":date, "time":time}
     base_table.insert_one(send)
-
-    new_hit(uid=uid, type = file_type, s3_url=s3_url,directory=directory, keywords=keywords)
-
-    return {"output":"Data added sucessfully to the database"}
     
-data = {
-    "uid": 1,
-    "s3_url": "https://images.pexels.com/photos/5896476/pexels-photo-5896476.jpeg",
-    "directory": "home/a",
-    "type": "image",
-    "date": "",
-    "time": ""
-}
+    x = new_hit(uid = uuid,file_type = file_type,s3_url = s3, directory=dir, keywords = keywords)
+    print(x)
+    if x:
+        return {"output":"Data added sucessfully to the database with a hit"}
+    else:
+        return {"output":"Data added sucessfully to the database without a hit"}
+# data = {
+#     "uid": 1,
+#     "s3_url": "https://images.pexels.com/photos/5896476/pexels-photo-5896476.jpeg",
+#     "directory": "home/a",
+#     "type": "image",
+#     "date": "",
+#     "time": ""
+# }

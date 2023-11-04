@@ -24,7 +24,7 @@ names= {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 
 
 def detect_file(source):
     objects=[]
-    results = yolov8(source = source, stream=True)
+    results = yolov8(source = source)
     for result in results:
         id = result.boxes.cls
         for i in id:
