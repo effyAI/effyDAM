@@ -5,24 +5,21 @@ import uuid
 client = pymongo.MongoClient("mongodb+srv://effybizai:AhM2SPj8dKfLId89@cluster0.yfq6agh.mongodb.net/?retryWrites=true&w=majority")
 db = client["effy-ai-tagging"]
 
-base_table = db["base_table"]
-keyword_table = db["keyword_table"]
 
 #Base table data   {"uid":uid,"s3_url":s3_url,"dir":dir,"file_type":type, "keywords":keywords, "caption":caption
 
 # Keyword Table Data
-keyword_data =  []   # {"keyword":[img_id,img_dir, vid_id, vid_dir]]}
-keyword_find = keyword_table.find()
 
-for doc in keyword_find:
-    keyword = doc["keyword"]
-    # img_ids = doc["img_ids"]
-    # img_dirs = doc["img_dir"]
-    # vid_ids = doc["vid_ids"]
-    # vid_dirs = doc["vid_dir"]
-    keyword_data.append(keyword)
 
 def new_hit(uid,file_type,s3_url, directory,keywords):  # new_hit(uid=uid, type = type, s3_url=s3_url,directory=directory, keywords=keywords)
+    keyword_data =  []   # {"keyword":[img_id,img_dir, vid_id, vid_dir]]}
+    
+    keyword_table = db["keyword_table"]
+    keyword_find = keyword_table.find()
+
+    for doc in keyword_find:
+        keyword = doc["keyword"]
+        keyword_data.append(keyword)
     for word in keywords:
         if word not in keyword_data:
             # Creating a new keyword in the keyword table
@@ -69,12 +66,12 @@ def new_hit(uid,file_type,s3_url, directory,keywords):  # new_hit(uid=uid, type 
                         new_values = {"$set":{"img_ids":img_ids.append(uid), "img_dirs":img_dirs.append(directory)}}
                         kt = keyword_table.update_one(filter=filter, update=new_values)
                         if kt:
-                            return ("New image data added to existing keyword.")
+                            return "New image data added to existing keyword."
                     elif file_type == "video":
                         new_values = {"$set":{"vid_ids":vid_ids.append(uid), "vid_dirs":vid_dirs.append(directory)}}
                         kt = keyword_table.update_one(filter=filter, update=new_values)
                         if kt:
-                            return ("New video data added to existing keyword.")
+                            return "New video data added to existing keyword."
                 
 
 

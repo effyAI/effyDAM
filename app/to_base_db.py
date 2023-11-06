@@ -23,11 +23,8 @@ def new_data(data):
     base_table.insert_one(send)
     
     x = new_hit(uid = uuid,file_type = file_type,s3_url = s3, directory=dir, keywords = keywords)
-    print(x)
-    if x:
-        return {"output":"Data added sucessfully to the database with a hit"}
-    else:
-        return {"output":"Data added sucessfully to the database without a hit"}
+    
+    return x
 # data = {
 #     "uid": 1,
 #     "s3_url": "https://images.pexels.com/photos/5896476/pexels-photo-5896476.jpeg",

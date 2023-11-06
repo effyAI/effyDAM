@@ -5,7 +5,7 @@ from to_base_db import new_data
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/") 
 def home():
     return "Home"
 
