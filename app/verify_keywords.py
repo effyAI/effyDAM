@@ -12,6 +12,7 @@ db = client["effy-ai-tagging"]
 
 
 def new_hit(uid,file_type,s3_url, directory,keywords):  # new_hit(uid=uid, type = type, s3_url=s3_url,directory=directory, keywords=keywords)
+    flag = 0
     keyword_data =  []   # {"keyword":[img_id,img_dir, vid_id, vid_dir]]}
     
     keyword_table = db["keyword_table"]
@@ -36,8 +37,9 @@ def new_hit(uid,file_type,s3_url, directory,keywords):  # new_hit(uid=uid, type 
 
                 data_send ={"key_id":key_id,"keyword":word,"img_ids":img_ids, "img_dirs":img_dirs, "vid_ids":vid_ids, "vid_dirs":vid_dirs}
                 kt = keyword_table.insert_one(data_send)
-                if kt: 
-                    return (f"New keyword added to keyword database: {word}")
+                if not kt:
+                    flag += 1
+
             if file_type == 'video':
                 img_ids = []
                 img_dirs = []
@@ -48,8 +50,8 @@ def new_hit(uid,file_type,s3_url, directory,keywords):  # new_hit(uid=uid, type 
 
                 data_send ={"key_id":key_id,"keyword":word,"img_ids":img_ids, "img_dirs":img_dirs, "vid_ids":vid_ids, "vid_dirs":vid_dirs}
                 kt1 = keyword_table.insert_one(data_send)
-                if kt1: 
-                    return (f"New keyword added to keyword database: {word}")
+                if not kt1:
+                    flag += 1
         
         elif word in keyword_data:
             # Found keyword , updating the existing one
@@ -65,15 +67,18 @@ def new_hit(uid,file_type,s3_url, directory,keywords):  # new_hit(uid=uid, type 
                     if file_type == "image":
                         new_values = {"$set":{"img_ids":img_ids.append(uid), "img_dirs":img_dirs.append(directory)}}
                         kt = keyword_table.update_one(filter=filter, update=new_values)
-                        if kt:
-                            return "New image data added to existing keyword."
+                        if not kt:
+                            flag += 1
                     elif file_type == "video":
                         new_values = {"$set":{"vid_ids":vid_ids.append(uid), "vid_dirs":vid_dirs.append(directory)}}
                         kt = keyword_table.update_one(filter=filter, update=new_values)
-                        if kt:
-                            return "New video data added to existing keyword."
+                        if not kt:
+                            flag += 1
                 
 
-
+    if flag == 0:
+        return 0
+    else:
+        return 1
 
                 

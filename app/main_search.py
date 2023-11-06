@@ -19,13 +19,15 @@ def process_list(input_list):
                 word_list.append(token.lemma_)
         return word_list
 
-for doc in mycollection.find():
-    
-    word = doc["keyword"]
-    keywords.append(word)    
+
 
 
 def get_data(input, filter):
+    
+    for doc in mycollection.find():
+        word = doc["keyword"]
+        keywords.append(word)    
+    
     final_ids = []
     final_dirs = []
     word_list = process_list(input)
