@@ -1,8 +1,15 @@
 # Add new file to mongodb database with captions and keywords
 import pymongo
-from captioning import get_tags
-from verify_keywords import new_hit
-import subprocess
+from captioning_process import get_tags
+from keywords_process import new_hit
+import os
+
+def remove_files_with_extensions(directory, extensions):
+    for file in os.listdir(directory):
+        if os.path.isfile(os.path.join(directory, file)):
+            if file.endswith(extensions):
+                os.remove(os.path.join(directory, file))
+    print("File romoving process completed")
 
 client = pymongo.MongoClient("mongodb+srv://effybizai:AhM2SPj8dKfLId89@cluster0.yfq6agh.mongodb.net/?retryWrites=true&w=majority")
 db = client["effy-ai-tagging"]
@@ -26,6 +33,7 @@ def new_data(data):
     if not add:
         flag +=1
     x = new_hit(uid = uuid,file_type = file_type,s3_url = s3, directory=dir, keywords = keywords)
+    remove_files_with_extensions("/home/ubuntu/development/effyDAM/app", (".mp4", ".jpg", ".jpeg"))
     if x  == 0 and flag == 0:
         return "Successfully added to database"
     else:

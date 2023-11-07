@@ -1,7 +1,7 @@
 # Main api - includes api for search and adding new file with tags 
 from flask import Flask, request  
-from main_search import search
-from to_base_db import new_data
+from search_process import search
+from base_process import new_data
 
 app = Flask(__name__)
 
