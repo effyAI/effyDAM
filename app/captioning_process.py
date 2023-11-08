@@ -35,7 +35,6 @@ def get_tags(s3_url, file_type):
     if file_type == "image":
         keywords = []
         cblip = blip(s3_url)[0]["generated_text"]
-        print(f"cblip")
         caption = str(cblip)
         processed = process_text(cblip)
         for i in processed:
@@ -53,7 +52,6 @@ def get_tags(s3_url, file_type):
         caption = ""
         try:
             yolo_det = detect_file(s3_url)
-            print(f"yolo")
         except:
             print("YOLO not working for vid")
 

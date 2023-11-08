@@ -8,7 +8,6 @@ db = client["effy-ai-tagging"]
 
 mycollection = db["keyword_table"]
 
-keywords = []
 
 def process_list(input_list):
     word_list = []
@@ -23,6 +22,7 @@ def process_list(input_list):
 
 
 def get_data(input, filter):
+    keywords = []
     
     for doc in mycollection.find():
         word = doc["keyword"]
