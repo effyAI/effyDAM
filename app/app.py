@@ -2,6 +2,7 @@
 from flask import Flask, request  
 from search_process import search
 from base_process import new_data
+import datetime
 
 app = Flask(__name__)
 
@@ -17,15 +18,16 @@ def search_data():
     output = search(data)
     return output
 
+
 @app.route("/upload", methods = ['POST']) 
 def upload():
 
-    print("Something got uploaded")
+    print(f"Something got uploaded at {datetime.datetime.now()}")
     data = request.get_json()
     
     output = new_data(data)
     # input: id,uid,s3_url, dir, type
-    
+    print(f"--------{datetime.datetime.now()}")
     return {"output":output}
 
 

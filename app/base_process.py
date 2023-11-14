@@ -32,13 +32,11 @@ def new_data(data):
     if not add:
         flag +=1
     x = new_hit(uid = uuid,file_type = file_type,s3_url = s3, directory=dir, keywords = keywords)
-    remove_files_with_extensions("/home/ubuntu/development/effyDAM/app", (".mp4", ".jpg", ".jpeg", ".png"))
-    if x  == 0 and flag == 0:
-        print("Successfully added to database")
-        return "Successfully added to database"
-    else:
-        print("Not successfully added to database")
-        return "Not successfully added to database"
+    remove_files_with_extensions("/home/ubuntu/development/effyDAM/app", (".mp4", ".jpg", ".jpeg", ".png", ".gif"))
+    
+    output = {"keywords": keywords, "description": caption}
+    
+    return output 
 # data = {
 #     "uid": 1,
 #     "s3_url": "https://images.pexels.com/photos/5896476/pexels-photo-5896476.jpeg",
