@@ -27,8 +27,6 @@ def upload():
     
     output = new_data(data)
     # input: id,uid,s3_url, dir, type
-    print(f"--------{datetime.datetime.now()}")
-    return {"output":output}
 
 
 if __name__ == "__main__":
