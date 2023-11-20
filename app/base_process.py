@@ -1,7 +1,7 @@
 # Add new file to mongodb database with captions and keywords
 import pymongo
-from captioning_process import get_tags
-from keywords_process import new_hit
+from tagging import get_tags
+from new_data import new_hit
 import os
 
 def remove_files_with_extensions(directory, extensions):
@@ -26,7 +26,7 @@ def new_data(data):
 
     flag = 0
 
-    keywords, caption = get_tags(s3,file_type)
+    keywords, caption, timestamps = get_tags(s3,file_type)
     send = {"uid":uuid,"s3_url":s3,"dir":dir,"file_type":file_type, "keywords":keywords, "caption":caption, "date":date, "time":time}
     add = base_table.insert_one(send)
     if not add:

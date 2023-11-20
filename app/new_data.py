@@ -11,7 +11,6 @@ def new_hit(uid,file_type,s3_url, directory,keywords):  # new_hit(uid=uid, type 
     flag = 0
     keyword_data =  []   # {"keyword":[img_id,img_dir, vid_id, vid_dir]]}
 
-    
     for doc in keyword_table.find():
         word1 = doc["keyword"]
         keyword_data.append(word1)

@@ -18,9 +18,6 @@ def process_list(input_list):
                 word_list.append(token.lemma_)
         return word_list
 
-
-
-
 def get_data(input, filter):
     keywords = []
     
@@ -88,11 +85,6 @@ def get_data(input, filter):
     
     
     return final_ids, final_dirs
-
-
-
-
-
 
 def search(data, filter = None):
     

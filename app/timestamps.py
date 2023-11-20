@@ -17,11 +17,12 @@ def detect_file(source):
                     objects.append(object)        
     return objects 
 
-def get_timestamps(url):
-    start_time = time.time()
+def process_video(url):
+    # start_time = time.time()
     stamps = {}
-    final = {}
-    keywords = {}
+    time_stamps = {}
+    final_objects = []
+
     cap = cv2.VideoCapture(url)
     fps = cap.get(cv2.CAP_PROP_FPS)
     frame_count = 0
@@ -35,38 +36,36 @@ def get_timestamps(url):
         temp = []
         if len(objects)!=0:
             for i in objects:
+                if i not in final_objects:
+                    final_objects.append(i)
+
                 if i in temp:
                     objects.remove(i)
                 else:
                     temp.append(i)
             stamps.update({frame_count:objects})
 
-            for value in stamps.values():
-                for i in value:
-                    if i not in keywords:
-                        keywords.update({i:[frame_count]})
-
-
-
         frame_count += 1
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count * fps)
 
     cap.release() 
 
-
     for second, objects in stamps.items():
         for obj in objects:
-            if obj in final:
-                final[obj].append(second)
+            if obj in time_stamps:
+                time_stamps[obj].append(second)
             else:
-                final[obj] = [second]
+                time_stamps[obj] = [second]
     # print(default)
 
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"\nTime taken: {elapsed_time} seconds\n")
-    print(f"Detections: {stamps}\n")
-    return final
+    # end_time = time.time()
+    # elapsed_time = end_time - start_time
+    # print(f"\nTime taken for timestamp process: {elapsed_time} seconds\n")
+    # print(f"Objects: {final_objects}\n")
+    # print(f"Stamps: {stamps}\n")
+    # print(f"Detections: {time_stamps}\n")
+
+    return final_objects, time_stamps
 
 
 v1 = "https://effy-dam.s3.us-east-1.amazonaws.com/dam_1_93585_1699949543.mp4" 
@@ -74,7 +73,7 @@ v2 = "https://effy-dam.s3.amazonaws.com/production_id_3971609+(720p).mp4"
 v3 = "https://effy-dam.s3.amazonaws.com/test.mp4"
 v4 = "https://effy-dam.s3.amazonaws.com/production_id_3944832+(2160p).mp4"
 
-print(get_timestamps(v4))
+print(process_video(v4))
 
 
 """
