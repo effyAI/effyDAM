@@ -20,17 +20,18 @@ def process_list(input_list):
 
 def get_data(input, filter):
     keywords = []
+    keyword_data = {}
     
     for doc in mycollection.find():
         word = doc["keyword"]
         keywords.append(word)    
     
-    final_ids = []
-    final_dirs = []
     word_list = process_list(input)
     
     if filter == None:
-        for word in word_list:     
+        for word in word_list: 
+            final_ids = []
+            final_dirs = []    
             if word in keywords:
                 for doc in mycollection.find():
                     keyword = doc["keyword"]
@@ -53,9 +54,16 @@ def get_data(input, filter):
                             if i not in final_dirs:
                                 final_dirs.append(i)
 
+                keyword_data.update({word:{"ids":final_ids, "dirs":final_dirs}})
+            else:
+                keyword_data.update({word:{"ids":[], "dirs":[]}})
+    
+
     elif filter == 'image':
-        for word in word_list:     
-            if word in keywords:
+        for word in word_list:   
+            final_ids = []
+            final_dirs = []   
+            if word in keywords: 
                 for doc in mycollection.find():
                     keyword = doc["keyword"]
                     img_ids = doc["img_ids"]
@@ -67,10 +75,14 @@ def get_data(input, filter):
                         for i in img_dirs:
                             if i not in final_dirs:
                                 final_dirs.append(i)
-
+                keyword_data.update({word:{"ids":final_ids, "dirs":final_dirs}})
+            else:
+                keyword_data.update({word:{"ids":[], "dirs":[]}})   
     elif filter == 'video':
-        for word in word_list:     
-            if word in keywords:
+        for word in word_list:
+            final_ids = []
+            final_dirs = []      
+            if word in keywords: 
                 for doc in mycollection.find():
                     keyword = doc["keyword"]
                     vid_ids = doc["vid_ids"]
@@ -82,24 +94,32 @@ def get_data(input, filter):
                     for i in vid_dirs:
                         if i not in final_dirs:
                             final_dirs.append(i)
+                keyword_data.update({word:{"ids":final_ids, "dirs":final_dirs}})
+            else:
+                keyword_data.update({word:{"ids":[], "dirs":[]}}) 
+    print(keyword_data)    
     
-    
-    return final_ids, final_dirs
+    return keyword_data
 
 def search(data, filter = None):
     
     input = data["data"]
-    final_ids, final_dirs = get_data(input, filter)  
-                        
+    # final_ids, final_dirs = get_data(input, filter)  
 
-    output = {
-        "ids":final_ids,
-        "directories":final_dirs      
-    }
+    # output = {
+    #     "ids":final_ids,
+    #     "directories":final_dirs      
+    # }
+    output = get_data(input, filter)                      
 
     return output
 
 
-# datas = {"data":["person standing in fron of bus"]}
+# datas = {"data":["person standing in front of bus"]}
 
 # print(search(datas))
+
+
+
+# {'person': {'ids': ['509', '510', 2729222222, 509, 525, '526', 533, '535', '536', '537', '559', '1', '2', '3', '4', 2983648, 291122111, 545212, 5452122222222, 5488888, 5488, 54232323232323, '534', '540', '6'], 'dirs': ['https://demo.effybiz.com/temp/', 'home/c', 'https://effyai.effybiz.com/temp/', 'home/e']}, 
+#  'stand': {'ids': [2729222222, 2983648, 291122111], 'dirs': ['home/c']}, 'bus': {'ids': [2729222222, 2983648, 291122111], 'dirs': ['home/c']}}

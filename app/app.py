@@ -1,10 +1,12 @@
 # Main api - includes api for search and adding new file with tags 
 from flask import Flask, request  
-from search_process import search
+from search import search
 from base_process import new_data
 import datetime
 
 app = Flask(__name__)
+
+# gunicorn -w 4 -b 0.0.0.0:8000 app:app --timeout 99999999
 
 @app.route("/") 
 def home():
@@ -24,8 +26,9 @@ def upload():
 
     print(f"Something got uploaded at {datetime.datetime.now()}")
     data = request.get_json()
-    
     output = new_data(data)
+    print("Successfully completed.")
+    return output
     # input: id,uid,s3_url, dir, type
 
 

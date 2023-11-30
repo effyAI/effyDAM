@@ -91,7 +91,7 @@ def new_hit(uid,file_type,s3_url, directory,keywords):  # new_hit(uid=uid, type 
     if flag == 0:
         return 0
     else:
-        print("Flag raised to 1 for verify_keywords.py")
+        print("Flag raised to 1 for new hit file.py")
         return 1
 
                 

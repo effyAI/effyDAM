@@ -1,7 +1,6 @@
 from transformers import pipeline
 import spacy
 from ultralytics import YOLO
-from datetime import datetime
 import cv2
 
 nlp = spacy.load("en_core_web_sm")
@@ -17,6 +16,28 @@ def words_from_sentence(sentence):
         if token.is_stop == False:
             word_list.append(token.lemma_)
     return word_list
+
+def convert_to_range(lst):
+    ranges = []
+    start = lst[0]
+    end = lst[0]
+
+    for num in lst[1:]:
+        if num == end + 1:
+            end = num
+        else:
+            if start == end:
+                ranges.append(str(start))
+            else:
+                ranges.append(f"{start}-{end}")
+            start = end = num
+
+    if start == end:
+        ranges.append(str(start))
+    else:
+        ranges.append(f"{start}-{end}")
+
+    return ranges
 
 def detect_file(source):
     objects =[]
@@ -63,18 +84,22 @@ def process_video(url):
 
     for second, objects in stamps.items():
         for obj in objects:
-            if obj in time_stamps:
+            if obj in time_stamps: 
                 time_stamps[obj].append(second)
             else:
                 time_stamps[obj] = [second]
+    
+    for keyword, stamp in time_stamps.items():
+        new_stamps = convert_to_range(stamp)
+        time_stamps.update({keyword:new_stamps})
 
-    print(f"\nObjects: {final_objects}\n")
-    print(f"Stamps: {stamps}\n")
-    print(f"Detections: {time_stamps}\n")
+    # print(f"\nObjects: {final_objects}\n")
+    # print(f"Stamps: {stamps}\n")
+    # print(f"Detections: {time_stamps}\n")
 
     return final_objects, time_stamps
 
-def process_file(s3_url, file_type):
+def process_image_or_video(s3_url, file_type):
     if file_type == "image":
         keywords = []
         cblip = blip(s3_url)[0]["generated_text"]
@@ -88,7 +113,7 @@ def process_file(s3_url, file_type):
             if i not in keywords:
                 keywords.append(i)
 
-        return keywords, caption, None
+        return keywords, caption, ""
 
     elif file_type == "video":
         caption = ""
@@ -96,7 +121,9 @@ def process_file(s3_url, file_type):
         return keywords, caption, timestamps
 
 
-v4 = "https://effy-dam.s3.amazonaws.com/production_id_3944832+(2160p).mp4"
+# v4 = "https://effy-dam.s3.amazonaws.com/production_id_3944832+(2160p).mp4"
 
+# print(process_image_or_video(v4,"video"))
 
 # print(get_tags("https://images.pexels.com/photos/5896476/pexels-photo-5896476.jpeg","image"))
+# print(convert_to_range([1,2,3,5,7,9,10,11,12,16,19,32,54, 66,67,68]))
