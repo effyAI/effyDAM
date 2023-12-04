@@ -6,10 +6,11 @@ import os
 from text_files import process_text_file
 from audio_files import process_audio_file
 
-open_file_types = ["psd","ai","esp","eps"]
+open_file_types = ["psd","ai","esp","eps","xd","fig"]
 text_file_types = ["txt","pdf","docx","xlsx"]
 audio_file_types = ["mp3", "wav"]
-image_video_file_types = ["jpg", "jpeg", "gif", "png", "mp4"]
+image_video_file_types = ["jpg", "jpeg", "gif", "png", "webp", "avif", "svg", "tiff", "heic", "mov", "mp4", "avi"]
+
 all_types = []
 all_types.extend(open_file_types)
 all_types.extend(text_file_types)
